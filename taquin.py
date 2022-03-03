@@ -8,4 +8,5 @@ def inversions(tab, x):
         
         if tab[element] < x and tab[element] != 0:
             counter += 1
-
+            
+    return counter
