@@ -45,6 +45,3 @@ def initial(largeur):
         valid = soluble(c)
         
     return c
-   
-
-print('test')
