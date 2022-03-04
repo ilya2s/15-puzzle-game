@@ -45,12 +45,5 @@ def initial(largeur):
         valid = soluble(c)
         
     return c
-
-
-jeuBase = [3,5,6,7,10,14,11,9,4,13,2,0,8,1,12,15]
-jeu = initial(4)
-
-print(jeu)
-
-print(soluble(jeu))   
+   
 
