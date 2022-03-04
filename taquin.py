@@ -47,3 +47,4 @@ def initial(largeur):
     return c
    
 
+print('test')
