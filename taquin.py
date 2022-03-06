@@ -1,8 +1,31 @@
 import random
 import math
 
+def makeTable(n):
+    tab = []
+    for i in range(n):
+        tab.append(i)
+    
+    return tab
+
+
 def permutationAleatoire(n):
-    return random.sample(range(n), n)
+    
+    tab = makeTable(n)
+        
+    for i in range(n):
+        
+        temp = tab[i]
+        
+        randomIndex = -1
+        
+        while randomIndex < i:
+            randomIndex = math.floor(random.random() * n)
+        
+        tab[i] = tab[randomIndex]
+        tab[randomIndex] = temp
+    
+    return tab
 
 
 def inversions(tab, x):
