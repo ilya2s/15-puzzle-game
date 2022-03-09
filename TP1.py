@@ -1,17 +1,18 @@
-setScreenMode(64,64)
 import tuiles
 
+setScreenMode(64,64)
+
 def afficherImage (x, y, colormap, image):
-    rangée = image
+    rangee = image
     for i in range(len(tuiles.images)):
-        for j in range (len(rangée)):
-            c=rangée[i][j]
+        for j in range (len(rangee)):
+            c=rangee[i][j]
             setPixel((x+j),(y+i), tuiles.colormap[c])
-            print(c)
 
 
 def afficherTuile(x, y, tuile):
-    afficherImage(x*16, y*16, tuiles.colormap, tuiles.images[tuile])
+    taille = len(tuiles.images)
+    afficherImage(x*taille, y*taille, tuiles.colormap, tuiles.images[tuile])
     
 afficherTuile(3,3,10)
     
