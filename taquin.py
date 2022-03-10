@@ -14,6 +14,14 @@ def afficherImage (x, y, colormap, image):
 def afficherTuile(x, y, tuile):
     taille = len(tuiles.images)
     afficherImage(x*taille, y*taille, tuiles.colormap, tuiles.images[tuile])
+    
+
+def attendreClick():
+    while True:
+        sleep(0.01)
+        a = getMouse()
+        if a.button == 1:
+            return ((a.x)//16, (a.y)//16)
 
 
 def makeTable(n):
