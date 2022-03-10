@@ -4,24 +4,34 @@ import tuiles
 
 
 def afficherImage (x, y, colormap, image):
-    rangee = image
-    for i in range(len(tuiles.images)):
-        for j in range (len(rangee)):
-            c=rangee[i][j]
-            setPixel((x+j),(y+i), tuiles.colormap[c])
+    size = len(tuiles.images)
+    
+    for i in range(size):
+        for j in range(size):
+            color = image[i][j]
+            setPixel(x + j, y + i, colormap[color])
 
 
 def afficherTuile(x, y, tuile):
-    taille = len(tuiles.images)
-    afficherImage(x*taille, y*taille, tuiles.colormap, tuiles.images[tuile])
-    
+    size = len(tuiles.images)
+    afficherImage(x * size, y * size, tuiles.colormap,  tuiles.images[tuile])
+
 
 def attendreClick():
+    
+    size = len(tuiles.images)
+        
     while True:
+        
         sleep(0.01)
         a = getMouse()
+        
         if a.button == 1:
-            return ((a.x)//16, (a.y)//16)
+            
+            while a.button != 0:
+                a = getMouse()
+                
+            return(a.x // size, a.y // size)
 
 
 def makeTable(n):
