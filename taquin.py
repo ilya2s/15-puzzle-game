@@ -3,6 +3,7 @@ import math
 import tuiles
 
 
+
 def afficherImage (x, y, colormap, image):
     size = len(tuiles.images)
     
@@ -84,7 +85,10 @@ def findR(tab):
 
 def soluble(tab):
     
-    total = findR(tab)
+    if not len(tab) % 2:
+        total = findR(tab)
+    else:
+        total = 0  
     
     for i in range(1, len(tab)):
         total += inversions(tab, i)
