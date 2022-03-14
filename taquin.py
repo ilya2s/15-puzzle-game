@@ -1,100 +1,196 @@
+# Auteurs : Ilyass El Ouazzani (20199147), Pierre-Emmanuel Seguin (20164112)
+# Date : 14-03-2022
+
+
+# Ce programme reproduit le Jeu de taquin : un un jeu graphique qui se joue en
+# solitaire sur une grille carrée. Il se joue en déplaçant des carreaux
+# numéroté. Il consiste à remettre dans l'ordre les carreaux du jeu à partir
+# d'une configuration initiale quelconque.
+
+
 import random
 import math
 import tuiles
 
 
+# La procédure afficherImage() prend comme paramètres une position (x,y),
+# un esemble de couleurs et une image et utilise la procédure setPixel()
+# pour affiche à la coordonnée (x,y) de la grille de pixels de l'écran
+# l'image indiquée en paramètre. 
+# x (int) : la position horizontale du premier pixel à afficher
+# y (int) : la position vericale du premier pixel à afficher
+# colormap (list) : l'ensemble des couleurs a afficher
+# image (list) : image définie par les indices des couleurs de colormap
 def afficherImage (x, y, colormap, image):
+    
+    # La taille de l'image en pixels
     size = len(image)
     
-    x = -x if x < 0 else x
-    y = -y if y < 0 else y
+    # Verifier que les positions entrées en paramètre sont positives
+    x = -x if x < 0 else x      # si x négatif on utilise -x
+    y = -y if y < 0 else y      # si y négatif on utilise -y
     
-    for i in range(size):
-        for j in range(size):
-            color = image[i][j]
+    # Boucle qui parcourt tous les couleurs que contient l'image
+    # et les affiches un à un à partir du pixel à la coordonnée (x,y)
+    for i in range(size):               # parcourir chaque ligne de l'image
+        for j in range(size):           # parcourir chque élément de la ligne
+            color = image[i][j]         # stocker la couleur
+            
+            # Afficher la couleur contenue dans colormap pour chaque pixel
+            # de l'image à partir du pixel (x,y) spécifié en paramètre
             setPixel(x + j, y + i, colormap[color])
 
 
+# La procédure afficherTuile() prend comme paramètres une position (x,y)
+# et le numéro d'une tuile et utilise la procédure afficherImage() pour
+# afficher à la postion (x,y) de la grille de tuiles l'image de la tuile.
+# x (int) : la postion horizontale de la tuile dans la grille de tuiles
+# y (int) : la position verticale de la tuile dans la grille de tuiles
+# tuile (int) : numero de la tuile à afficher (entre 0 et 15)
 def afficherTuile(x, y, tuile):
+    
+    # la taille de la tuile en pixels
     size = len(tuiles.images)
+    
+    # Appler la procédure afficherImage pour afficher l'image de la tuile
+    # à la position (x,y) multipliée par la taille en pixel.
     afficherImage(x * size, y * size, tuiles.colormap,  tuiles.images[tuile])
 
 
+# La fonction attendreClick() utilise la fonction getMouse () pour attendre
+# que le bouton de souris soit relaché. La fonction retourne un enregistrement
+# contenant les champs x et y qui indiquent la coordonnée de la tuile
+# sur laquelle le joueur a cliqué.
 def attendreClick():
     
+    # la taille de la tuile en pixels
     size = len(tuiles.images)
-        
-    while True:
-        
+    
+    # Boucle qui attend le click du joeusuppérieur à l'index de l'élément actuelk trop souvent
         sleep(0.01)
+        
+        # lire la position de la souris  
         a = getMouse()
         
+        # Si le joueur click sur le bouton de la souris
         if a.button == 1:
             
+            # Attendre que le joueur relâche le bouton de la souris
             while a.button != 0:
-                a = getMouse()
-                
+                a = getMouse()      # lire la position de la souris
+            
+            # return la position où le joueur a relaché le boutton de la souris
+            # la position a est divisé par la taille en pixel des tuiles pour 
+            # avoir la position de la tuile et non pas la postition du pixel    
             return(a.x // size, a.y // size)
 
 
+# La fonction makeTable() prend la longueur d'un tableau en paramètre
+# et retourne un tableau de n entiers entre 0 et n-1.
+# n (int) : longueur du tableau voulu.
 def makeTable(n):
-    tab = []
+    tab = []                # Créer un tableau vide
+    
+    # boucle qui ajoute les entiers entre 0 et n-1 au tableau 
     for i in range(n):
         tab.append(i)
     
+    # retourner un tableau de n entiers entre 0 et n-1
     return tab
 
 
+# La fonction permutationAleatoire() prend en paramètre la longueur
+# d'un tableau et utilise la fonction makeTable() pour retourner un tableau
+# de n entiers en 0 et n-1 dans un ordre aléatoire.
+# n (int) : longueur du tableau voulu.
 def permutationAleatoire(n):
     
-    tab = makeTable(n)
+    tab = makeTable(n)  # créer un tableau n entiers entre 0 et n-1
         
+    # boucle qui parcourt chaque élément du tableau
     for i in range(n):
         
-        temp = tab[i]
+        temp = tab[i]       # stocker l'élément actuel
         
+        # la position aléatoire d'un autre élément du tableau initialisée à -1
+        # afin de ne pas choisir le premier élément du tableau
         randomIndex = -1
         
+        # Boucle qui attend un index suppérieur à celui de l'élément actuel
         while randomIndex < i:
+            
+            # trouver index aléatoire entre 0 et n-1
             randomIndex = math.floor(random.random() * n)
         
+        # remplacer l'élément actuel par l'élément à l'index aléatoire
         tab[i] = tab[randomIndex]
+        
+        # remplacer l'élément à l'index aléatoire par l'élément actuel       
         tab[randomIndex] = temp
     
+    # retourner le tableau mélangé
     return tab
 
 
+# La fonction inversions() prend comme paramètres un tableau d'entiers
+# et une valeur x et retourne le nombre d'éléments dans le tableau qui sont
+# après x et inférieurs à x. Cela indique indique à quel point la valeur x 
+# n'est pas bien ordonnée dans le tableau tab.
+# tab (list) : tableau d'entiers
+# x (int) : valeur a évaluer
 def inversions(tab, x):
     
-    index = tab.index(x) + 1
+    # index auquel on commence a évaluer l'ordre
+    index = tab.index(x) + 1    # index de la valeur suivant x dans tab
     
+    # compteur d'éléments inférieurs à x
     counter = 0
     
+    # parcourir chaque élément qui suit la valeur x
     for i in range(index, len(tab)):
         
+        # verifier si l'élément est inférieur à x et qu'il n'est pas l'élément 0
         if tab[i] < x and tab[i] != 0:
-            counter += 1
-            
+            counter += 1    # si c'est le cas incrementer le compteur de 1
+    
+    # retourner le nombre d'éléments après x inférieurs à x   
     return counter
 
 
+# La fonction findR() prend un tableau d'entiers en paramètre et retourne
+# la rangée de l'élément 0 (la case vide) dans le jeu
+# tab (list) : tableau d'entiers
 def findR(tab):
     
+    # nombre de rangées dans le jeu
     nbRows = int(math.sqrt(len(tab)))
     
+    # retourner la rangée de la case vide
     return math.ceil((tab.index(0) + 1) / nbRows)
 
 
+# La fonction soluble() prend un tableau d'entiers en paramètre vérifie si la
+# combinaison d'entiers est soluble pour le jeu de Taquin
+# tab (list) : tableau d'entiers
 def soluble(tab):
     
+    # si le tableau de longueur pair et n'est pas vide
     if not len(tab) % 2 and len(tab) != 0:
-        total = findR(tab)
+        total = findR(tab)      # initialise compteur à la rangée de r
+        
+    # si le tableau de longueur impair 
     else:
-        total = 0  
+        total = 0               # initialise compteur à 0
     
+    # parcourir toutes les valeurs entre 1 et len(tableau) - 1
     for i in range(1, len(tab)):
+        
+        # incrémenter total par le nombre d'éléments suivants la valeur
+        # et inférieurs à la valeur de l'itération actuelle
         total += inversions(tab, i)
     
+    # Si total pair, la combinaison est soluble pour le jeu, retourne True
+    # Si total impair, combinaison non soluble pour le jeu, retourne False
     return not total % 2
 
 
