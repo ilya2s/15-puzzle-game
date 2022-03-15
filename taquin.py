@@ -194,137 +194,264 @@ def soluble(tab):
     return not total % 2
 
 
+# La fonction initial() prend une largeur en paramètre et utilise
+# les fonctions permutationAleatoire() et soluble() pour retourner un tableau
+# de longueur largeur*largeur contenant les entiers de 0 à largeur*largeur - 1
+# qui correspond à une configuration de tuile qui est soluble.
+# largeur (int) : nombre de rangées et de colonnes du jeu de Taquin.
 def initial(largeur):
     
+    # variable pour valider si la configuration du tableau est soluble
     valid = False
     
+    # boucle qui attends une configuration soluble
     while not valid:
+        
+        # créer un tableau d'entiers dans un ordre aléatoire
         c = permutationAleatoire(largeur*largeur)
+        
+        # valider si la configuration du tableau est soluble pour le jeu
         valid = soluble(c)
         
-    return c
+    return c        # retourner le tableau ayant une configuration soluble
 
 
+# La procédure renderGrid() prend une largeur et tableau d'entiers comme
+# paramètres et utilise la procédure afficherTuile() pour afficher chaque
+# à l'écran la tuile correspendante à chaque entier du tableau.
+# largeur (int) : nombre de rangées et de colonnes du jeu
+# grid (list) : liste d'entiers représentant les tuiles du jeu
 def renderGrid(largeur, grid):
+    
+    # boucle qui va afficher chaque tuile du tableau à la bonne postion dans la
+    # grille de tuiles de l'écran
     for i in range(len(grid)):
+        
+        # (i % largeur) nous donne la position x de la tuile selon l'index de 
+        # l'entier dans le tableau et (i // largeur) nous donne la position y 
+        # de la tuile selon l'index de l'entier dans le tableau 
         afficherTuile(i % largeur, i // largeur, grid[i])
 
-        
+
+# La fonction tileIndex() prend la position d'une tuile et la largeur du jeu
+# comme paramètres et retourne l'index de cette tuile dans le tableau d'entiers
+# contenant la configuration du jeu.
+# tile (Tuple) : contient position (x, y) de la tuile dans la gille de tuiles
+# largeur (int) : nombre de rangées et de colonnes du jeu   
 def tileIndex(tile, largeur):
-    return largeur*tile[1] + tile[0]
-
-
-def tileBorders(tile, largeur):
-    border = struct(left = tile[0] == 0, right = tile[0] == largeur -1, 
-                       up = tile[1] == 0, down = tile[1] == largeur - 1)
     
+    # nombre de rangées * position en y + position en x nous donne l'indice de
+    # la tuile dans le tableau contenant la configuration du jeu.
+    return largeur*tile[1] + tile[0]        # retourner l'indice de la tuile
+
+
+# La fonction tileBorders() prend la position d'une tuile et la largeur du jeu
+# comme paramètres et retourne une structure qui indique si cette tuile est en
+# bordure du jeu par la gauche, la droite, le haut ou le bas.
+# tile (Tuple) : contient position (x, y) de la tuile dans la gille de tuiles
+# largeur (int) : nombre de rangées et de colonnes du jeu   
+def tileBorders(tile, largeur):
+    
+    # la tuile sera en bordure du jeu si sa position en x == 0
+    # ou si sa position en y == largeur - 1
+    border = struct(left = tile[0] == 0,            # verifier bordure à gauche
+                    right = tile[0] == largeur -1,  # verifier bordure à droite
+                    up = tile[1] == 0,              # verifier borduire en haut
+                    down = tile[1] == largeur - 1)  # verifier bordure en bas
+    
+    # retourner la structure indiquant les bordures de la tuile
     return border
 
 
+# La fonction tileOffsets() prend en paramètre les bordures d'une tuile dans
+# le jeu et retourne une structure qui indique si on doit on explorer le
+# voisinage de cette tuile vers la gauche, la droite, le haut et le bas.
+# borders (struct) : structure indiquant les bordures de la tuile dans le jeu
 def tileOffsets(borders):
-    offsets = struct(left = 0 if borders.left else 1,
-                     right = 0 if borders.right else 1,
-                     up = 0 if borders.up else 1,
-                     down = 0 if borders.down else 1)
     
+    # on explore 1 tuile voisine si la tuile actuelle n'est pas en bordure
+    # du jeu sinon on n'explore pas dans cette direction.
+    offsets = struct(left = 0 if borders.left else 1,       # vers la gauche
+                     right = 0 if borders.right else 1,     # vers la droite
+                     up = 0 if borders.up else 1,           # vers le haut
+                     down = 0 if borders.down else 1)       # vers le bas
+    
+    # retourner la  structure indiquant les directions à explorer et de combien
+    # de tuiles va t'on explorer dans chaque direction
     return offsets
 
 
+# La fonction canMOve() prends la position d'une tuile, la largeur du jeu et
+# le tableau contenant la configuration du jeu et utilise les fonctions
+# tileBoders(), tileOffsets() et tileIndex() pour retourner l'index de la 
+# tuile vide si celle si est dans le voisinage de la tuile. sinon la fonction
+# retourne -1 (la tuile ne peu pas bouger)
+# tile (Tuple) : contient position (x, y) de la tuile dans la gille de tuiles
+# largeur (int) : nombre de rangées et de colonnes du jeu
+# grid (list) : liste d'entiers représentant les tuiles du jeu
 def canMove(tile, largeur, grid):
     
+    # structure indiquant si la tuile se trouve en bordure du jeu et où
     borders = tileBorders(tile, largeur)
+    
+    # structure indiquant les directions à expolrer pour la tuile
     offsets = tileOffsets(borders)
     
+    # le range duquel on va explorer le voisinage de la tuile horizontalement
     xStart = tile[0] - offsets.left
     xStop = tile[0] + offsets.right + 1
     
+    # le range duquel on va explorer le voisinage de la tuile verticalement
     yStart = tile[1] - offsets.up
     yStop = tile[1] + offsets.down + 1
     
+    # boucle qui explore a gauche et a droite de la tuile
     for x in range(xStart, xStop):
-        neighbourIndex = tileIndex((x, tile[1]), largeur)
-        if grid[neighbourIndex] == 0:
-            return neighbourIndex
         
-    for y in range(yStart, yStop):
-        neighbourIndex = tileIndex((tile[0], y), largeur)
+        # l'index de la tuile voisine 
+        neighbourIndex = tileIndex((x, tile[1]), largeur)
+        
+        # si la tuile voisine est la tuile vide (r) on retourne son index
         if grid[neighbourIndex] == 0:
             return neighbourIndex
     
-    return -1
+    # boucle qui explore en haut et en bas de la tuile    
+    for y in range(yStart, yStop):
+        
+        # l'index de la tuile voisine
+        neighbourIndex = tileIndex((tile[0], y), largeur)
+        
+        # si la tuile voisine est la tuile vide (r) on retourne son index
+        if grid[neighbourIndex] == 0:
+            return neighbourIndex
+    
+    # si aucune des tuiles voisines n'est la tuile vide
+    return -1       # on retourne -1 (la tuile ne peu pas bouger)
 
 
+# La fonction makeSolution() prends la largeur du jeu en paramètre et utilise
+# la fonction makeTable() pour retourner un tableau d'entier represetant
+# la solution finale du jeu de Taquin selon sa largeur.
+# largeur (int) : nombre de rangées et de colonnes du jeu
 def makeSolution(largeur):
     
+    # Créer un tableau d'entiers de 0 à largeur * largeur - 1
     solution = makeTable(largeur*largeur)
-    solution.remove(0)
-    solution.append(0)
+    solution.remove(0)      # enlever 0 du début du tableau
+    solution.append(0)      # rajouter 0 à la fin du tableau
     
+    # retourner la solution du jeu
     return solution
 
 
+# La procédure moveTile() prends l'index de la tuile vide, l'index de la tuile
+# cliquée par le joeur, le tableau contennant la configuration du jeu et la
+# largeur du jeu en paramètre. La procédure met à jour la configuration du jeu
+# et utilise la procédure renderGrid() pour afficher la nouvelle configuration.
+# indexR (int) : index de la tuile vide (r) dans la configuration du jeu
+# clickedIndex (int) : index de la tuile cliquée par le joueur
+# grid (list) : liste d'entiers représentant les tuiles du jeu 
+# largeur (int) : nombre de rangées et de colonnes du jeu
 def moveTile(indexR, clickedIndex, grid, largeur):
     
+    # stocker temorairement la tuile vide (r)
     temp = grid[indexR]
+    
+    # remplacer la tuile vide par la tuile cliquée par le joeur
     grid[indexR] = grid[clickedIndex]
+    
+    # remplacer la tuile cliquée par la tuile vide
     grid[clickedIndex] = temp
     
+    # afficher la nouvelle configuration sur l'écran
     renderGrid(largeur, grid)
 
         
+# La fonction taquin() prends la largeur du jeu en paramètre et utilise toutes les
+# procedures et fonctions définies afin d'éxecuter le déroulement du jeu de Taquin.
+# largeur (int) : nombre de rangées et de colonnes du jeu
 def taquin(largeur):
     
+    # taille de l'écran en pixels
+    # (16 px par tuile) * nombre de rangées et de colonnes du jeu
     screenSize = 16 * largeur
     
+    # créer un écran d'une taille adaptée à la largeur du jeu
     setScreenMode(screenSize, screenSize)
     
+    # boucle principale du jeu
+    # recommence une nouvelle partie après chaque résolution du jeu
     while True:
-                
+        
+        # créer la configuration initiale soluble du jeu
         grid = initial(largeur)
         
+        # afficher la configuration initiale à l'écran
         renderGrid(largeur, grid)
         
+        # créer la solution de cette configuration
         solution = makeSolution(largeur)
-
+        
+        # variable pour déterminé si le jeu est résolu ou non
         solved = False
-
+        
+        # boucle qui attends que le jeu soit résolu
         while not solved:
-
+            
+            # attendre que le joeur clique sur une tuile
             clickedTile = attendreClick()
-
+            
+            # stocker l'index de la tuile cliquée par le joueur
             indexClicked = tileIndex(clickedTile, largeur)
-
+            
+            # verifier si la tuile cliquée peu se déplacer
+            # stocker l'index de la tuile vide voisine 
+            # (-1 si la tuile cliquée ne peu pas se déplacer)
             indexR = canMove(clickedTile, largeur, grid)
             
+            # si la tuile cliquée peu se déplacer
             if indexR >= 0:
+                
+                # mettre à jour la configuration du jeu
+                # et mettre à jour l'affichage à l'écran
                 moveTile(indexR, indexClicked, grid, largeur)
             
+            # verifier si le jeu est résolu
             solved = grid == solution
         
+        # quand le jeu est résolu afficher un message de félicitation au joueur
         else:
             alert('FÉLICITATION!')
 
 
+# La fonction testTaquin a pour but de tester le bon fonctionnement des
+# procédures et fonctions du programme afin de déceler touts bugs ou erreurs.
 def testTaquin():
     
-    
+    # Tests unitaires de la fonction permutationAleatoire()
     assert permutationAleatoire(0) == []
     assert permutationAleatoire(-1)== []
     assert permutationAleatoire(1) == [0]
     assert permutationAleatoire(2) == [0, 1] or [1, 0]
     
+    # Tests unitaires de la fonction inversions()
     assert inversions([0,2,9,1,4,3],2)== 1
     assert inversions([0,9,8,2,4,3],8)== 3
     assert inversions([0,0,0,0,0],0)== 0 
     assert inversions([1,2,3,4,5],1)== 0 
     assert inversions([1,8,5,4,2,6],6)== 0 
     
+    # Tests unitaires de la fonction soluble()
     assert soluble([3,5,6,7,10,14,11,9,4,13,2,0,8,1,12,15])== True
     assert soluble([3,5,6,7,10,14,15,9,4,13,2,0,8,1,12,11])== False
     assert soluble([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])== False
     assert soluble([15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0])== False
     assert soluble([14,15,9,12,11,10,13,2,7,6,5,4,3,8,1,0])== True
     
+    # Tests unitaires de la fonction initial()
+    # La fonction initiale nous retournant des tableaux aléatoire nous avons 
+    # donc decider de tester quelques cas "spéciaux" et complétons nos tests
+    # avec la vérification de la longueur du tableaux retourné. 
     assert initial(1)== [0]
     assert initial(0)== [] 
     assert len(initial(2))== 4
@@ -332,10 +459,17 @@ def testTaquin():
     assert len(initial(4))== 16
     
     
+    ###### Tests unitaires de la procédure afficherImage() ######
+        
+    # L'appel répéter de la procédure setScreenMode() lors des tests nous
+    # permet de renitialisé les pixels de l'écran
     setScreenMode(16, 16)    
-
+    
+    
     afficherImage(0, 0, tuiles.colormap, tuiles.images[10])
     
+    # r représente le texte qui doit être retourné par l'appel de la fonction
+    # exportScreen() si la procéduure afficherImage() est valide 
     r = """
 #fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#ccc
 #fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#fff#ccc#888
@@ -355,6 +489,8 @@ def testTaquin():
 #ccc#888#888#888#888#888#888#888#888#888#888#888#888#888#888#888
 """
     
+    # La méthode .strip() nous permet d'enlever les espaces aux debut et à
+    # la fin du texte facilitant ainsi la structure des tests.
     assert exportScreen() == r.strip()
     
     
@@ -405,7 +541,8 @@ def testTaquin():
     
     assert exportScreen() == r.strip()
     
-    
+    # Valeurs plus grande que l'image pour tester le positionnement des
+    # pixels a l'endroit souhaité.
     setScreenMode(18, 18)
     
     
@@ -464,6 +601,9 @@ def testTaquin():
     assert exportScreen() == r.strip()
     
     
+    ###### Tests unitaires de la procédure afficherTuile() ######
+    
+    #Ces valeurs furent choisies pour faciliter la mise en forme des tests
     setScreenMode(16, 32)
     
     afficherTuile(0, 0, 0)
@@ -585,7 +725,8 @@ def testTaquin():
     
     assert exportScreen() == r.strip()
     
-    
+    # L'appel répéter de la procédure setScreenMode() lors des tests nous
+    # permet de renitialisé les pixels de l'écran
     setScreenMode(16, 32)
     
     
