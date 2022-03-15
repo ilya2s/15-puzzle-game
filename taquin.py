@@ -66,7 +66,10 @@ def attendreClick():
     # la taille de la tuile en pixels
     size = len(tuiles.images)
     
-    # Boucle qui attend le click du joeusuppérieur à l'index de l'élément actuelk trop souvent
+    # Boucle qui attend le click du joeur
+    while True:
+        
+        # attendre afin que le joeur ne clique pas trop souvent
         sleep(0.01)
         
         # lire la position de la souris  
