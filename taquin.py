@@ -152,7 +152,7 @@ def inversions(tab, x):
     # parcourir chaque élément qui suit la valeur x
     for i in range(index, len(tab)):
         
-        # verifier si l'élément est inférieur à x et qu'il n'est pas l'élément 0
+        # verifier si l'élément est inférieur à x et qu'il n'est pas élément 0
         if tab[i] < x and tab[i] != 0:
             counter += 1    # si c'est le cas incrementer le compteur de 1
     
@@ -370,8 +370,8 @@ def moveTile(indexR, clickedIndex, grid, largeur):
     renderGrid(largeur, grid)
 
         
-# La fonction taquin() prends la largeur du jeu en paramètre et utilise toutes les
-# procedures et fonctions définies afin d'éxecuter le déroulement du jeu de Taquin.
+# La fonction taquin() prends la largeur du jeu en paramètre et utilise toutes
+# les procedures et fonctions définies afin d'éxecuter déroulement jeu Taquin.
 # largeur (int) : nombre de rangées et de colonnes du jeu
 def taquin(largeur):
     
@@ -424,7 +424,7 @@ def taquin(largeur):
         
         # quand le jeu est résolu afficher un message de félicitation au joueur
         else:
-            alert('FÉLICITATION!')
+            alert('FÉLICITATIONS!')
 
 
 # La fonction testTaquin a pour but de tester le bon fonctionnement des
