@@ -1,7 +1,8 @@
-# tp1-ift1015
-TP1
+# tp1-ift1015 - Jeu de Taquin
 
-1. Introduction
+Jeu de Taquin en python dans le cadre du cours IFT1015
+
+## 1. Introduction
 
 Le jeu se joue sur une grille carrée de tuiles. Chaque tuile est une petite image de 16x16 pixels. Voici un exemple de ce qui pourrait être affiché au début du jeu :
 
@@ -37,7 +38,8 @@ Dans l'environnement codeBoot l'écran graphique est simulé par une fenêtre qu
             #000#000#000#000
 
 Dans le processus de développement, pour faciliter le débogage, il est conseillé d'utiliser une faible résolution d'écran simulé pour bien voir chaque pixel. C'est également utile pour faire des tests unitaires.
-2. Jeu
+
+## 2. Jeu
 
 Le jeu de taquin est un jeu de réflexion qui consiste à déplacer par "glissement" des tuiles carrées pour les placer dans un ordre précis. Si la grille est N par N alors il y a N*N-1 tuiles numérotées de 1 à N*N-1 et une des cases de la grille est vide. Le jeu débute avec les N*N-1 tuiles dans un état de désordre. Le joueur peut uniquement glisser une (ou des) tuile(s) vers la case vide pour changer la position de ces tuiles et indirectement de la case vide. Le jeu se termine lorsque les tuiles sont en ordre numérique de gauche à droite et haut en bas avec la case vide en bas à droite de la grille.
 
@@ -56,24 +58,30 @@ Vous devez concevoir et coder les procédures spécifiées ci-dessous en respect
 Nous vous fournissons sur Studium le fichier tuiles.py qui contient les définitions des images des 16 tuiles possibles (case vide et les 15 nombres 1 à 15). Ce fichier contient la déclaration de 2 variables globales ayant comme valeur des tableaux : colormap et images. Le tableau colormap contient la définition des 5 couleurs qui sont utilisées dans les images de tuiles. Chaque élément du tableau colormap est une structure avec des champs r, g et b spécifiant la couleur. Le tableau images contient 16 éléments, chacun représentant une image. Une image est un tableau de 16 éléments, chaque élement représente une rangée de pixels de l'image et est un tableau contenant 16 entiers de 0 à 4 qui indiquent l'index de la couleur dans le tableau colormap. Chaque image contient donc 256 pixels (16x16 pixels). Les pixels sont disposés de haut en bas et de gauche à droite. Le tableau images est donc un tableau à 3 dimensions.
 
 Le fichier tuiles.py doit être copié dans codeBoot (avec un glisser-déposer), et votre fichier taquin.py doit importer le fichier de tuiles avec l'énoncé import tuiles pour avoir accès à ses définitions. Dans taquin.py vous pourrez par la suite faire tuiles.images et tuiles.colormap pour lire le contenu des variables définies dans tuiles.py.
-3.1 Procédure afficherImage(x, y, colormap, image)
+
+## 3.1 Procédure afficherImage(x, y, colormap, image)
 
 Cette procédure affiche à la coordonnée (x,y) de la grille de pixels l'image indiquée par le paramètre image qui utilise des couleurs définies par le paramètre colormap. Ce dernier doit être un tableau de tableaux d'entiers entre 0 et la longueur du tableau colormap dont les éléments sont des structures avec des champs r, g et b spécifiant des couleurs. La longueur du tableau image est la hauteur de l'image (en nombre de rangées de pixels) et la longueur des éléments du tableau image est la largeur de l'image (en nombre de colonnes de pixels). Les entiers contenus dans l'image sont donc des entiers qui sont l'index de la couleur du pixel dans le tableau colormap. L'image n'a pas nécessairement une taille 16x16 (en d'autres termes c'est une procédure générale pour afficher des images de n'importe quelle taille contenant n'importe quelles couleurs).
-3.2 Procédure afficherTuile(x, y, tuile)
+
+## 3.2 Procédure afficherTuile(x, y, tuile)
 
 Cette procédure affiche à l'écran à la coordonnée (x,y) de la grille de tuiles l'image de la tuile indiquée par le paramètre tuile (un entier de 0 à 15). Cette procédure doit appeler la procédure afficherImage.
-3.3 Fonction attendreClic()
+
+## 3.3 Fonction attendreClic()
 
 Cette fonction attend que le bouton de souris soit relaché, puis attend que le bouton de souris soit appuyé. La fonction retourne un enregistrement contenant les champs x et y qui indiquent la coordonnée de la tuile sur laquelle le joueur a cliqué.
 
 L'implantation de cette fonction doit se faire avec une boucle qui fait appel à la fonction getMouse et la fonction sleep avec un paramètre égal à 0.01 . L'appel à la fonction sleep permet de ne pas demander trop souvent l'état de la souris car ça pourrait gaspiller inutilement l'énergie (et chauffer le processeur).
-3.4 Fonction permutationAleatoire(n)
+
+## 3.4 Fonction permutationAleatoire(n)
 
 La fonction permutationAleatoire retourne un nouveau tableau de longueur n contenant les entiers de 0 à n-1 dans un ordre aléatoire. Un algorithme simple pour le faire consiste à créer un tableau contenant les entiers de 0 à n-1. Puis pour chaque index i de ce tableau choisir aléatoirement un index j ≥ i et échanger les éléments aux indices i et j.
-3.5 Fonction inversions(tab, x)
+
+## 3.5 Fonction inversions(tab, x)
 
 La fonction inversions prends deux paramètres : un tableau tab de longueur n contenant les entiers de 0 à n-1 (dans un ordre quelconque), et un entier x entre 1 et n-1. La fonction retourne le nombre d'éléments dans le tableau tab qui suivent la valeur x et qui sont une des valeurs de 1 à x-1. Le nombre retourné indique à quel point la valeur x n'est pas bien ordonnée dans le tableau tab. En effet pour un tableau tab contenant des valeurs ordonnées la fonction inversions retournera 0 pour toute valeur x (c'est-à-dire aucune valeur n'est "inversée").
-3.6 Fonction soluble(tab)
+
+## 3.6 Fonction soluble(tab)
 
 La fonction soluble prends comme unique paramètre un tableau tab de longueur n contenant les entiers de 0 à n-1 (dans un ordre quelconque). La longueur de tab doit être un carré parfait. La valeur de retour est un booléen qui indique si cette séquence de tuiles placées sur la grille de gauche à droite et de haut en bas est une configuration du jeu qui a une solution. L'élément du tableau contenant la valeur 0 indique la position de la case vide. Donc l'appel soluble([3,5,6,7,10,14,11,9,4,13,2,0,8,1,12,15]) retourne True car cette séquence correspond à la configuration des tuiles donnée dans l'introduction qui a une solution.
 
@@ -98,19 +106,21 @@ Pour calculer le résultat de la fonction il n'est pas nécessaire de trouver la
  ----
    44 = somme (qui est un nombre pair donc soluble)
 
-3.7 Fonction initial(largeur)
+## 3.7 Fonction initial(largeur)
 
 La fonction initial prends comme unique paramètre un entier positif largeur qui est la largeur (et hauteur) de la grille de jeu. La fonction retourne un tableau de longeur largeur*largeur contenant les entiers de 0 à largeur*largeur-1 qui correspond à une configuration de tuile qui est soluble.
 
 L'algorithme suivant permet de trouver une configuration soluble. On fait un appel de permutationAleatoire(largeur*largeur) pour générer une configuration candidate c. Si soluble(c) est vrai alors on a trouvé une configuration soluble. Sinon on tente avec une nouvelle permutation aléatoire jusqu'à ce qu'on trouve une configuration soluble. Généralement il faut un petit nombre de tentatives pour trouver une configuration acceptable.
-3.8 Procédure taquin(largeur)
+
+## 3.8 Procédure taquin(largeur)
 
 Cette procédure est la procédure principale du jeu. L'unique paramètre largeur indique la largeur de la grille et est un entier entre 2 et 4. Vous devez faire le codage de votre programme pour qu'il n'y ait pas de limite supérieure au paramètre largeur, mais pour le TP1 une valeur de largeur plus grande que 4 est interdite car il y a seulement 16 images de tuiles définies dans tuiles.py.
 
 La procédure taquin s'occupe du déroulement du jeu. L'état initial est déterminé par un appel à la fonction initial puis cette configuration de tuiles est affichée. Le jeu réagit aux clics du joueur et déplace les tuiles en conséquence. Lorsque toutes les tuiles sont en ordre avec la case vide dans le coin inférieur droit, alors le programme félicite le joueur avec un message affiché avec alert puis recommence une nouvelle partie.
 
 Votre programme ne doit pas faire un appel à la procédure taquin car c'est le correcteur qui le fera. Pour votre phase de test, il est suggéré d'utiliser au tout début une petite grille, par exemple 2x2. Ça permet de trouver les erreurs plus facilement et de tester la fin de partie sans avoir à passer un temps fou à cliquer des tuiles. L'utilisation d'une petite grille peut également être utile pour faire des tests unitaires.
-3.9 Procédure testTaquin()
+
+## 3.9 Procédure testTaquin()
 
 Cette procédure effectue les tests unitaires des procédures afficherImage et afficherTuile et les fonctions permutationAleatoire, inversions, soluble et initial. Pour tester les procédures afficherImage et afficherTuile il faudra utiliser la fonction exportScreen afin de pouvoir tester avec assert que le résultat est bon. Faites des appels à setScreenMode avec des petits entiers (pas plus grands que 32) pour ne pas avoir des tests unitaires trop longs. N'oubliez pas que vous pouvez briser les longs textes litéraux sur plusieurs lignes en utilisant le caractère d'échappement \ à la fin des lignes. Vous devez avoir de 5 à 10 tests par fonction et procédure. La procédure testTaquin() peut contenir des tests unitaires pour les autres abstractions procédurales que vous avez définies, mais ce n'est pas requis (utilisez votre jugement sur la pertinence de faire des tests de ces abstractions procédurales).
 
