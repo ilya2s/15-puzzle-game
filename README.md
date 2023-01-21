@@ -2,6 +2,8 @@
 
 Jeu de Taquin en python
 
+![Jeu du Taquin](https://user-images.githubusercontent.com/42526358/213894149-8d6d7ed5-fd12-455b-80cf-40cd1e5bdc75.png)
+
 ## 1. Introduction
 
 Le jeu se joue sur une grille carrée de tuiles. Chaque tuile est une petite image de 16x16 pixels. Voici un exemple de ce qui pourrait être affiché au début du jeu :
