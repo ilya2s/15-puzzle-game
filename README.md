@@ -1,6 +1,6 @@
 # TP1-ift1015 - Jeu de Taquin
 
-Jeu de Taquin en python dans le cadre du cours IFT1015
+Jeu de Taquin en python
 
 ## 1. Introduction
 
